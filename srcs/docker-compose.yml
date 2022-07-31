@@ -7,7 +7,7 @@ services:
     env_file: .env
     volumes:
       - /home/aalannys/data/db:/var/lib/mysql
-    restart: always
+    restart: "no"
     networks:
       - awesomenet
 

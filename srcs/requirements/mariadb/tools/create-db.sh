@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 mysql << EOF
 CREATE DATABASE wordpress;
-DROP USER IF EXISTS '$USER'@'%';
+DROP USER IF EXISTS '$USER'@'localhost';
 CREATE USER '$USER'@'%' IDENTIFIED BY '$USERPSWD';
-GRANT ALL PRIVILEGES ON wordpress.* TO '$USER'@'%';
+GRANT ALL PRIVILEGES ON wordpress.* TO '$USER'@'localhost';
 FLUSH PRIVILEGES;
-ALTER USER 'root'@'localhost' IDENTIFIED BY '$ROOTPSWD';
+ALTER USER 'root'@'%' IDENTIFIED BY '$ROOTPSWD';
 EOF
