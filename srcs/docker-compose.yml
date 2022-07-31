@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    env_file: .env
+    volumes:
+      - /home/aalannys/data/db:/var/lib/mysql
+    restart: always
+    networks:
+      - awesomenet
+
+networks:
+  awesomenet:
