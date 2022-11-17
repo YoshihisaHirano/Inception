@@ -6,8 +6,9 @@ services:
     build: ./requirements/mariadb
     env_file: .env
     volumes:
-      - /home/aalannys/data/db:/var/lib/mysql
-    restart: "no"
+      - /home/aalannys/data/db:/var/lib/mysql/data
+      - /home/aalannys/data/db/logs:/var/lib/mysql/logs
+    restart: "always"
     networks:
       - awesomenet
 

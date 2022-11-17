@@ -1,10 +1,12 @@
 #!/bin/sh
 
-mysql << EOF
-CREATE DATABASE wordpress;
-DROP USER IF EXISTS '$USER'@'localhost';
-CREATE USER '$USER'@'%' IDENTIFIED BY '$USERPSWD';
-GRANT ALL PRIVILEGES ON wordpress.* TO '$USER'@'localhost';
-FLUSH PRIVILEGES;
-ALTER USER 'root'@'%' IDENTIFIED BY '$ROOTPSWD';
-EOF
+apt-get update
+apt-get install -y mariadb-server
+
+service mysql start
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;\
+DROP USER IF EXISTS '$MYSQL_USER'@'%';\
+CREATE USER "$MYSQL_USER"@"%" IDENTIFIED BY '$MYSQL_PASSWORD';\
+GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';\
+FLUSH PRIVILEGES;"
+mysqladmin -u root password "$MYSQL_ROOT_PASSWORD"
