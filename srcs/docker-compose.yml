@@ -3,14 +3,51 @@ version: "3.8"
 services:
   mariadb:
     container_name: mariadb
-    build: ./requirements/mariadb
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+      args:
+        MYSQL_DATABASE: $MYSQL_DATABASE
+        MYSQL_USER: $MYSQL_USER
+        MYSQL_PASSWORD: $MYSQL_PASSWORD
+        MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     env_file: .env
     volumes:
       - /home/aalannys/data/db:/var/lib/mysql/data
-      - /home/aalannys/data/db/logs:/var/lib/mysql/logs
     restart: "always"
-    networks:
-      - awesomenet
+    #networks:
+    #  - awesomenet
+  
+  wordpress:
+    image: wordpress:php7.3-fpm-alpine
+    volumes:
+      - /home/aalannys/data/html:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: $WORDPRESS_DB_HOST
+      WORDPRESS_DB_NAME: $WORDPRESS_DB_NAME
+      WORDPRESS_DB_PASSWORD: $WORDPRESS_DB_PASSWORD
+      WORDPRESS_DB_USER: $WORDPRESS_DB_USER
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    depends_on:
+      - mariadb
+    restart: "always"
+    links:
+      - mariadb
+    #networks:
+    #  - awesomenet
+
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    volumes:
+      - /home/aalannys/data/html:/var/www/html
+    ports:
+      - 443:443
+    restart: "always"
+    links:
+      - wordpress
+    #networks:
+    #  - awesomenet
 
 networks:
   awesomenet:
