@@ -6,7 +6,6 @@ ARG MYSQL_USER
 ARG MYSQL_PASSWORD
 ARG MYSQL_ROOT_PASSWORD
 
-COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d
 COPY ./tools/ .
 
 RUN apt-get update && apt-get install -y mariadb-server 

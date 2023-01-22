@@ -1,9 +1,11 @@
 #!/bin/sh
-userdel mysql
+# userdel mysql
 #makes sure that the correct user no. owns mysql directory
-useradd -u 1001 mysql
-chown -R mysql:mysql /var/lib/mysql
+# useradd -u 1001 mysql
+# chown -R mysql:mysql /var/lib/mysql
 
+sed -ie 's/bind-address/#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
+sed -ie 's/#port/port/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 service mysql start
 mysql -u root -e "DROP DATABASE IF EXISTS $MYSQL_DATABASE"
 mysql -u root -e "DROP USER IF EXISTS '$MYSQL_USER'@'%'"

@@ -3,6 +3,7 @@ version: "3.8"
 services:
   mariadb:
     container_name: mariadb
+    image: mariadb
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
@@ -11,43 +12,56 @@ services:
         MYSQL_USER: $MYSQL_USER
         MYSQL_PASSWORD: $MYSQL_PASSWORD
         MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-    env_file: .env
     volumes:
-      - /home/aalannys/data/db:/var/lib/mysql/data
+      - db:/var/lib/mysql
     restart: "always"
-    #networks:
-    #  - awesomenet
+    networks:
+     - awesomenet
   
   wordpress:
-    image: wordpress:php7.3-fpm-alpine
-    volumes:
-      - /home/aalannys/data/html:/var/www/html
-    environment:
-      WORDPRESS_DB_HOST: $WORDPRESS_DB_HOST
-      WORDPRESS_DB_NAME: $WORDPRESS_DB_NAME
-      WORDPRESS_DB_PASSWORD: $WORDPRESS_DB_PASSWORD
-      WORDPRESS_DB_USER: $WORDPRESS_DB_USER
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    container_name: wordpress
+    image: wordpress
+    build: ./requirements/wordpress
     depends_on:
       - mariadb
+    volumes:
+      - wp:/var/www/html
+    env_file:
+      - .env
     restart: "always"
-    links:
-      - mariadb
-    #networks:
-    #  - awesomenet
+    networks:
+      - awesomenet
 
   nginx:
     container_name: nginx
+    image: nginx
     build: ./requirements/nginx
     volumes:
-      - /home/aalannys/data/html:/var/www/html
+      - wp:/var/www/html
     ports:
       - 443:443
     restart: "always"
-    links:
+    depends_on:
       - wordpress
-    #networks:
-    #  - awesomenet
+    networks:
+     - awesomenet
 
 networks:
   awesomenet:
+    driver: bridge
+
+volumes:
+  db:
+    name: db
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/aalannys/data/db
+  wp:
+    name: wp
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/aalannys/data/wp
