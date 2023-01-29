@@ -4,6 +4,8 @@ services:
   mariadb:
     container_name: mariadb
     image: mariadb
+    env_file:
+      - .env
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
