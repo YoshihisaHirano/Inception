@@ -1,4 +1,4 @@
-DOCKER_COMPOSE	=	docker-compose -f ./srcs/docker-compose.yml
+DOCKER_COMPOSE	=	docker-compose -f srcs/docker-compose.yml --env-file srcs/.env
 
 .PHONY:	all re build background foreground stop rm
 
