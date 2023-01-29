@@ -6,7 +6,7 @@ all:		build foreground
 
 build:
 			mkdir -p ~/data/db ~/data/wp
-			$(DOCKER_COMPOSE) 
+			$(DOCKER_COMPOSE) build
 
 foreground:
 			$(DOCKER_COMPOSE) up
